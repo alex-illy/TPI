@@ -1,4 +1,3 @@
 # TPI
-ThesisPipelineImplementation
+This is the Thesis Pipeline Implementation 
 
-To test and sleep afterwards
