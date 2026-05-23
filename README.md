@@ -15,7 +15,10 @@ To achieve the goal of this thesis, the ping-pong example from CBG_Executor is u
 
 
 ### Pipeline Implementation Documentation 
-[Stage 1 Tracing and Python Scripts](Stage%201%20Tracing%20and%20Python%20Scripts.md)
-[Stage 2 QVT-o Transformation](Stage%202%20QVT-o%20Transformation.md)
-[Stage 3 Acceleo Transformation](Stage%203%20Acceleo%20Transformation.md)
+
+- [Stage 1 Tracing and Python Scripts](Stage%201%20Tracing%20and%20Python%20Scripts.md)
+- [Stage 2 QVT-o Transformation](Stage%202%20QVT-o%20Transformation.md)
+- [Stage 3 Acceleo Transformation](Stage%203%20Acceleo%20Transformation.md)
+
+
 Following the 3 stages step by step will output a ready to verify UPPAAL complaint model of the ping-pong example from CBG_Executor.  You need an Ubuntu 22.04 with RT enabled to achieve the same result. No real time kernel implies no kernel traces, whom are critical for this thesis. 
