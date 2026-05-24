@@ -10,29 +10,7 @@
 
 ---
 
-## Part 2: Configure MANIFEST.MF
-
-Open `META-INF/MANIFEST.MF`. The `Require-Bundle` section must include the following:
-
-```
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi,
- org.eclipse.ocl,
- org.eclipse.ocl.ecore,
- org.eclipse.acceleo.common;bundle-version="3.3.0",
- org.eclipse.acceleo.model;bundle-version="3.3.0",
- org.eclipse.acceleo.profiler;bundle-version="3.3.0",
- org.eclipse.acceleo.engine;bundle-version="3.3.0",
- com.google.guava,
- ROS2VerificationModelMM
-```
-
-The last entry (`ROS2VerificationMetamodel`) links the metamodel project so EMF can resolve the `http://www.example.org/ROS2VerificationModelMM` URI at runtime.
-
----
-
-## Part 3: The Acceleo Template
+## Part 2: The Acceleo Template
 
 1. `ROS2VM2UTA` → `src` → `ROS2VM2UTA.main` → `generateUTA.mtl`
 2. Replace the entire content with:
@@ -395,39 +373,8 @@ system [for (executor : Executor | aSystem.executors) separator(', ')][executor.
 
 ---
 
-## Part 4: Register the Metamodel Package
+## Part 3: Run the Acceleo Transformation
 
-###  Fix GenerateUTA.java
-
-
-Open `src/ROS2VM2UTA/main/GenerateUTA.java`. Locate the `registerPackages` method. Change `@generated` to `@generated NOT` and add the registration call:
-
-```java
-/**
- * This can be used to update the resource set's package registry with all needed EPackages.
- *
- * @param resourceSet
- *            The resource set which registry has to be updated.
- * @generated NOT
- */
-@Override
-public void registerPackages(ResourceSet resourceSet) {
-    super.registerPackages(resourceSet);
-    if (!isInWorkspace(ros2verificationmetamodel.ROS2VerificationModelMM.ROS2VerificationModelMMPackage.class)) {
-        resourceSet.getPackageRegistry().put(
-            ros2verificationmetamodel.ROS2VerificationModelMM.ROS2VerificationModelMMPackage.eNS_URI,
-            ros2verificationmetamodel.ROS2VerificationModelMM.ROS2VerificationModelMMPackage.eINSTANCE);
-    }
-}
-```
-
-> The `@generated NOT` tag prevents the Acceleo code generator from overwriting this method on subsequent builds.
-
----
-
-## Part 5: Run the Acceleo Transformation
-
-### Option A — Run from Eclipse (Launch Configuration)
 
 1. Right-click `generateUTA.mtl` → **Run As** → **Run Configurations…**
 2. Right-click **Acceleo Application** in the left panel → **New Configuration**
@@ -436,7 +383,6 @@ public void registerPackages(ResourceSet resourceSet) {
 5. Model: browse to `ROS2VerificationMetamodel/transformations/ROS2DataToVerification.xmi`
 6. Target: create a `transformations/` folder inside any output project and point to it
 7. Apply → Run
-
 
 
 ## Output
