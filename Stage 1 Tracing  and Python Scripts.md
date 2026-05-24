@@ -76,7 +76,8 @@ sudo update-grub
 sudo reboot
 ```
 
-CPUs 2 and 3 will no longer receive normal scheduler tasks.
+CPUs 2 and 3 will no longer receive normal scheduler tasks. 
+**Attention, this needs to be rolled back afterwards. If not, the 2 cores will not be used for normal activities and your machine will have a bottleneck in the performance.** 
 
 #### Step 2 — Pin ping_pong to isolated CPUs
 

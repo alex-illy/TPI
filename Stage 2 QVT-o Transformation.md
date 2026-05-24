@@ -174,14 +174,13 @@ art 1: ROS 2 Data Metamodel (`ROS2DataModelMM`)
 1. Open `ROS2DataModelMM.genmodel`
 2. Right-click the root element → **Generate Model Code**
 
-Java source files appear in `src/` and `src-gen/`.
 ### 4. Add the Data Model XMI (Stage 1 output)
 
 1. Right-click `ROS2DataModelMM` → `model` → **New** → **File** → `ROS2DataModel.xmi`
 2. Paste the content of `ROS2DataModel.xmi` produced by Stage 1 into this file
 
 
-## Part 2: ROS 2 Verification Metamodel (`ROS2VerificationMetamodel`)
+## Part 2: ROS 2 Verification Metamodel
 
 ### 1. Create the project
 
@@ -358,7 +357,7 @@ A `transformations/` folder appears in the project.
 
 ## Part 3: RunQVTO.java
 
-This class runs the QVT-O transformation standalone (no Eclipse launch config required).
+This class runs the QVT-O transformation standalone.
 
 1. Right-click `src` → **New** → **Class**
 2. Name: `RunQVTO`, package: `ros2verificationmetamodel` → Finish
@@ -548,7 +547,7 @@ mapping ROS2DataModelMM::SubscriberCallback::createSubscriberTemplate() : ROS2Ve
 
 ### 2. Run the QVT-O transformation
 
-Run via RunQVTO.java (recommended)**
+Run via `RunQVTO.java`
 
 1. Right-click `RunQVTO.java` → **Run As** → **Run Configurations…**
 2. Make sure that in **Arguments** → **Working Directory** → **Other** → `${workspace_loc:ROS2VerificationMetamodel}`
