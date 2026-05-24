@@ -3,9 +3,9 @@ art 1: ROS 2 Data Metamodel (`ROS2DataModelMM`)
 ### 1. Create the project
 
 1. File → New → Project
-2. Select **Eclipse Modeling Framework** → **Empty EMF Project**
-3. Name: `ROS2DataModelMM`
-4. Main package name: `ROS2DataModelMM`
+2. Select **Eclipse Modeling Framework** → ** Ecore Modeling Project**
+3. Name: `ROS2DataModelMM` --> Next
+4. Main package name: `ROS2DataModelMM` --> Next
 5. Click **Finish**
 
 ### 2. Paste the ecore metamodel
@@ -185,9 +185,9 @@ art 1: ROS 2 Data Metamodel (`ROS2DataModelMM`)
 ### 1. Create the project
 
 1. File → New → Project
-2. Select **Eclipse Modeling Framework** → **Empty EMF Project**
-3. Name: `ROS2VerificationMetamodel`
-4. Main package name: `ROS2VerificationModelMM`
+2. Select **Eclipse Modeling Framework** → ** Ecore Modeling Project**
+3. Name: `ROS2VerificationMetamodel` --> Next 
+4. Main package name: `ROS2VerificationModelMM` --> Next
 5. Click **Finish**
 
 ### 2. Paste the ecore metamodel
@@ -329,10 +329,8 @@ art 1: ROS 2 Data Metamodel (`ROS2DataModelMM`)
 
 ### 3. Generate Java code from genmodel
 
-1. Right-click `ROS2VerificationModelMM.ecore` → **New** → **Other** → **EMF Generator Model** → Next
-2. Keep default name `ROS2VerificationModelMM.genmodel` → Next → Next → Finish
-3. Open `ROS2VerificationModelMM.genmodel`
-4. Right-click the root element → **Generate Model Code**
+1. Open `ROS2VerificationModelMM.genmodel`
+2. Right-click the root element → **Generate Model Code**
 
 ### 4. Add QVT nature to the project
 

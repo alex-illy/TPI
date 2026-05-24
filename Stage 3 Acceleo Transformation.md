@@ -4,7 +4,7 @@
 2. Select **Acceleo Model to Text** → **Acceleo Project** → Next
 3. Name: `ROS2VM2UTA` → Next
 4. Module name: `generateUTA`
-5. **Metamodel URIs** → click the green **+** → select **Runtime Metamodel** → search for `http://www.example.org/ROS2VerificationModelMM` → OK
+5. **Metamodel URIs** → click the green **+** → select **Runtime Version→ search for `http://www.example.org/ROS2VerificationModelMM` → OK
 6. Type: System, check Generate File and Main Template
 7. Finish
 
