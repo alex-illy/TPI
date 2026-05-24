@@ -12,6 +12,7 @@ To achieve the goal of this thesis, the ping-pong example from CBG_Executor is u
   - OS: Ubuntu 22.04 with Real Time Kernel --> more details in this [documentation](ROS%202%20Humble%20Real%20Time%20Kernel%20with%20Tracing.md)
   - Eclipse EMF 2026-03 (with the default Acceleo and QVT-O installations)
   - UPPAAL 5.0.0
+  - Python 3.10 (the default one from Ubuntu 22.04)
 
 
 ### Pipeline Implementation Documentation 
