@@ -81,13 +81,3 @@ sudo apt install -y \
 14) Verify if traces are enabled: `ros2 run tracetools status`
 
 
-##### Tracing Example 
-0) If you are using kernel tracing with a non-root user, make sure to add that user to the  `tracing` group
-	1) Create the group if it doesn't exist: `sudo groupadd -r tracing`
-	2) Add the user: `sudo usermod -aG tracing $USER`
- 1) Start the LTTng session daemon: `lttng-sessiond --daemonize`
-2) In one terminal, switch to ros2 env: `cd ros2_humble`and  trace `perf_test`:      `ros2 trace --session-name perf-test --kernel --list`
-3) In another terminal, run `performance_test` as root for real-time priorities from : `sudo ./install/performance_test/lib/performance_test/perf_test -c rclcpp-single-threaded-executor -p 1 -s 1 -r 0 -m Array1m --reliability RELIABLE --max-runtime 60 --use-rt-prio 98` If you get an error involving shared libraries, run the command like this: `sudo env PATH="$PATH" LD_LIBRARY_PATH="$LD_LIBRARY_PATH" ./install/performance_test/lib/performance_test/perf_test -c rclcpp-single-threaded-executor -p 1 -s 1 -r 0 -m Array1m --reliability RELIABLE --max-runtime 60 --use-rt-prio 98`
-4) Validate the trace with babeltrace: `babeltrace ~/.ros/tracing/perf-test | less`
-
-
