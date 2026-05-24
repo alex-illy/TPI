@@ -3,7 +3,7 @@ art 1: ROS 2 Data Metamodel (`ROS2DataModelMM`)
 ### 1. Create the project
 
 1. File → New → Project
-2. Select **Eclipse Modeling Framework** → ** Ecore Modeling Project**
+2. Select **Eclipse Modeling Framework** → **Ecore Modeling Project**
 3. Name: `ROS2DataModelMM` --> Next
 4. Main package name: `ROS2DataModelMM` --> Next
 5. Click **Finish**
@@ -185,8 +185,8 @@ art 1: ROS 2 Data Metamodel (`ROS2DataModelMM`)
 ### 1. Create the project
 
 1. File → New → Project
-2. Select **Eclipse Modeling Framework** → ** Ecore Modeling Project**
-3. Name: `ROS2VerificationMetamodel` --> Next 
+2. Select **Eclipse Modeling Framework** → **Ecore Modeling Project**
+3. Name: `ROS2VerificationModelMM` --> Next 
 4. Main package name: `ROS2VerificationModelMM` --> Next
 5. Click **Finish**
 
@@ -334,15 +334,15 @@ art 1: ROS 2 Data Metamodel (`ROS2DataModelMM`)
 
 ### 4. Add QVT nature to the project
 
-1. Right-click `ROS2VerificationMetamodel` → **Properties** → **Project Natures**
-2. Click **Add…** → select **QVT Operational Project Nature** → OK
+1. Right-click `ROS2VerificationModelMM` → **Properties** → **Project Natures**
+2. Click **Add…** →Ok -> select **QVT Operational Project Nature** → OK
 3. Apply and Close
 
 A `transformations/` folder appears in the project.
 
 ### 5. Configure QVT Metamodel Mappings
 
-1. Right-click `ROS2VerificationMetamodel` → **Properties** → **QVT Settings** → **Metamodel Mappings**
+1. Right-click `ROS2VerificationModelMM` → **Properties** → **QVT Settings** → **Metamodel Mappings**
 2. Click **Add** for `ROS2DataModelMM`:
    - Source model URI: `http://www.example.org/ROS2DataModelMM`
    - Target model URI: browse to `ROS2DataModelMM/model/ROS2DataModelMM.ecore`
@@ -353,93 +353,7 @@ A `transformations/` folder appears in the project.
 
 ---
 
-## Part 3: RunQVTO.java
-
-This class runs the QVT-O transformation standalone.
-
-1. Right-click `src` → **New** → **Class**
-2. Name: `RunQVTO`, package: `ros2verificationmetamodel` → Finish
-3. Replace content with:
-```java
-package ros2verificationmetamodel;
-
-import java.io.File;
-import java.util.Collections;
-
-import org.eclipse.emf.common.util.BasicDiagnostic;
-import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.m2m.qvt.oml.BasicModelExtent;
-import org.eclipse.m2m.qvt.oml.ExecutionContextImpl;
-import org.eclipse.m2m.qvt.oml.ExecutionDiagnostic;
-import org.eclipse.m2m.qvt.oml.ModelExtent;
-import org.eclipse.m2m.qvt.oml.TransformationExecutor;
-
-public class RunQVTO {
-
-    public static void main(String[] args) throws Exception {
-        // Working dir must be set to ${workspace_loc:ROS2VerificationMetamodel}
-        String wsRoot = new File("").getAbsoluteFile().getParent();
-
-        String dataEcore = wsRoot + "/ROS2DataModelMM/model/ROS2DataModelMM.ecore";
-        String verEcore  = wsRoot + "/ROS2VerificationMetamodel/model/ROS2VerificationModelMM.ecore";
-        String inputXmi  = wsRoot + "/ROS2DataModelMM/model/ROS2DataModel.xmi";
-        String qvtoFile  = wsRoot + "/ROS2VerificationMetamodel/transformations/ROS2DM2ROS2VM.qvto";
-        String outputXmi = wsRoot + "/ROS2VerificationMetamodel/transformations/ROS2DataToVerification.xmi";
-
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi",   new XMIResourceFactoryImpl());
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*",     new XMIResourceFactoryImpl());
-
-        ResourceSet rs = new ResourceSetImpl();
-
-        Resource dataEcoreRes = rs.getResource(URI.createFileURI(dataEcore), true);
-        EPackage dataPkg = (EPackage) dataEcoreRes.getContents().get(0);
-        EPackage.Registry.INSTANCE.put(dataPkg.getNsURI(), dataPkg);
-
-        Resource verEcoreRes = rs.getResource(URI.createFileURI(verEcore), true);
-        EPackage verPkg = (EPackage) verEcoreRes.getContents().get(0);
-        EPackage.Registry.INSTANCE.put(verPkg.getNsURI(), verPkg);
-
-        Resource inputRes = rs.getResource(URI.createFileURI(inputXmi), true);
-        ModelExtent inputExtent  = new BasicModelExtent(inputRes.getContents());
-        ModelExtent outputExtent = new BasicModelExtent();
-
-        TransformationExecutor executor = new TransformationExecutor(URI.createFileURI(qvtoFile));
-        ExecutionContextImpl ctx = new ExecutionContextImpl();
-        ctx.setConfigProperty("keepModeling", true);
-        ExecutionDiagnostic result = executor.execute(ctx, inputExtent, outputExtent);
-
-        if (result.getSeverity() == Diagnostic.OK) {
-            ResourceSet outRs = new ResourceSetImpl();
-            outRs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-            Resource outRes = outRs.createResource(URI.createFileURI(outputXmi));
-            outRes.getContents().addAll(outputExtent.getContents());
-            outRes.save(Collections.emptyMap());
-            System.out.println("OK → " + outputXmi);
-        } else {
-            System.err.println("FAILED:");
-            for (Diagnostic d : result.getChildren()) System.err.println("  " + d.getMessage());
-        }
-    }
-}
-```
-4. Open `META-INF/MANIFEST.MF` → `Require-Bundle` must include:
-
-```
-org.eclipse.m2m.qvt.oml,
-org.eclipse.m2m.qvt.oml.runtime
-```
-
----
-
-## Part 4: QVT-O Transformation
+## Part 3: QVT-O Transformation
 
 ### 1. Create the transformation file
 
@@ -545,8 +459,11 @@ mapping ROS2DataModelMM::SubscriberCallback::createSubscriberTemplate() : ROS2Ve
 
 ### 2. Run the QVT-O transformation
 
-Run via `RunQVTO.java`
 
-1. Right-click `RunQVTO.java` → **Run As** → **Run Configurations…**
-2. Make sure that in **Arguments** → **Working Directory** → **Other** → `${workspace_loc:ROS2VerificationMetamodel}`
-3. Click **Run**
+1. Right-click on `ROS2DM2ROS2VM.qvto`
+2. Run as > Run configuration 
+3. Right click on QVT Operational Transformation > New Configuration 
+4. In dataModel > Model > Browse > ROS2DataModelMM > model > ROS2DataModel.xmi (should be something like this `platform:/resource/ROS2DataModelMM/model/ROS2DataModel.xmi`)
+5. Out verificationModel > Model > ROS2VerificationMM>transformations > ROS2DataToVerification.xmi (should be something like `platform:/resource/ROS2VerificationModelMM/transformations/ROS2DataToVerification.xmi`)
+6. Apply 
+7. Run

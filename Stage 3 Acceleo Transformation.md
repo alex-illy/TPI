@@ -25,7 +25,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.acceleo.profiler;bundle-version="3.3.0",
  org.eclipse.acceleo.engine;bundle-version="3.3.0",
  com.google.guava,
- ROS2VerificationMetamodel
+ ROS2VerificationModelMM
 ```
 
 The last entry (`ROS2VerificationMetamodel`) links the metamodel project so EMF can resolve the `http://www.example.org/ROS2VerificationModelMM` URI at runtime.
@@ -399,14 +399,8 @@ system [for (executor : Executor | aSystem.executors) separator(', ')][executor.
 
 ###  Fix GenerateUTA.java
 
-The generated `GenerateUTA.java` must register the `ROS2VerificationModelMM` package before loading the input XMI. Without this, EMF cannot resolve `http://www.example.org/ROS2VerificationModelMM` at runtime.
 
-Open `src/ROS2VM2UTA/main/GenerateUTA.java`. Verify:
-
-- `MODULE_FILE_NAME = "/ROS2VM2UTA/main/generateUTA"` (not `generateURA`)
-- `TEMPLATE_NAMES = { "generateUPPAALModel" }`
-
-Locate the `registerPackages` method. Change `@generated` to `@generated NOT` and add the registration call:
+Open `src/ROS2VM2UTA/main/GenerateUTA.java`. Locate the `registerPackages` method. Change `@generated` to `@generated NOT` and add the registration call:
 
 ```java
 /**
