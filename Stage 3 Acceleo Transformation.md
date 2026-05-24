@@ -447,10 +447,10 @@ public void registerPackages(ResourceSet resourceSet) {
 
 ## Output
 
-An XML file named `<system_name>.xml` (e.g., `ros2_system.xml`) conforming to the UPPAAL flat system DTD.
+An XML file named `<system_name>.xml` (e.g., `ros2_system.xml`) conforming to UPPAAL. 
 
 Open the file in **UPPAAL** to verify the generated timed automata. The file contains:
 - One template per executor (timer + subscriber callback local variables, clock-guarded transitions)
 - One template per unique publisher topic
 - One template per unique subscriber topic
-- 8 UPPAAL verification queries (see table below)
+- 8 UPPAAL verification queries
