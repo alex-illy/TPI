@@ -367,20 +367,11 @@ system [for (executor : Executor | aSystem.executors) separator(', ')][executor.
 
 ## Part 3: Run the Acceleo Transformation
 
-Before running the transformation, force Eclipse to recompile the Acceleo module:
-
-1. **Project** → **Clean...**
-2. Select `ROS2VM2UTA`
-3. Enable **Start a build immediately**
-4. Confirm that `ROS2VM2UTA/bin/ROS2VM2UTA/main/generateUTA.emtl` is regenerated after the `.mtl` edit
-
-If this step is skipped, Eclipse may run an old compiled `.emtl` file and UPPAAL will still show the old query comments/formulas.
-
 1. Right-click `generateUTA.mtl` → **Run As** → **Run Configurations…**
 2. Right-click **Acceleo Application** in the left panel → **New Configuration**
 3. Project: `ROS2VM2UTA`
 4. Main class: `ROS2VM2UTA.main.GenerateUTA`
-5. Model: browse to `ROS2VerificationMetamodel/transformations/ROS2DataToVerification.xmi`
+5. Model: browse to `/ROS2VerificationModelMM/transformations/ROS2DataToVerification.xmi`
 6. Target: create a `transformations/` folder inside any output project and point to it
 7. Apply → Run
 
