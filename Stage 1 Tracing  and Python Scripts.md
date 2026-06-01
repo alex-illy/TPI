@@ -56,7 +56,7 @@ echo "Stop tracing:"
 echo "  sudo lttng stop && sudo lttng destroy $SESSION"
 echo ""
 echo "Fix ownership (if running ping_pong as root):"
-echo "  sudo chown -R illy:illy $OUTPUT"
+echo "  sudo chown -R user:user $OUTPUT"
 ```
 2) make it executable: `chmod +x cbg_ping_pong.sh`
 
@@ -105,7 +105,7 @@ sudo lttng-sessiond --daemonize
 ./cbg_ping_pong.sh
 
 # Terminal 2: run the example (pinned to isolated CPUs 2,3 at SCHED_FIFO priority 98)
-source ~/ros2_humble/install/local_setup.bash
+source /path/to/ros2_humble/install/local_setup.bash
 taskset -c 2,3 chrt -f 98 ros2 run examples_rclcpp_cbg_executor ping_pong
 # ping_pong runs until you press Ctrl+C — stop it before stopping tracing
 
@@ -116,10 +116,7 @@ sudo lttng stop && sudo lttng destroy ping_pong_trace_<timestamp>
 # Validate
 babeltrace2 ~/traces/ping_pong_trace_<timestamp> | less
 
-# Feed into Stage 1
-python3 ~/Desktop/test_rt/traces2xmi.py \
-    ~/traces/ping_pong_trace_<timestamp> \
-    ROS2DataModel.xmi
+
 ```
 
 

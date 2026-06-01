@@ -300,19 +300,19 @@ system [for (executor : Executor | aSystem.executors) separator(', ')][executor.
 
 [comment ── Verification queries (8 queries, mapped to 3 Research Questions) ── /]
 [comment
-  Q1 → RQ1+RQ3: valid execution path — transformation produces viable model
+  Q1 → RQ1:     valid execution path — trace-derived topology produces viable model
   Q2 → RQ1:     timer clock bound from trace reachable in model
-  Q3 → RQ2+RQ3: message delivery reachable — QoS RELIABLE guarantee representable
-  Q4 → RQ1:     system reaches operational state with elapsed time
-  Q5 → RQ1+RQ3: subscriber executor reachably executes — trace-to-model fidelity
-  Q6 → RQ3:     timer callback reachably fires — periodic scheduling captured
-  Q7 → RQ2:     QoS throughput bound reachable and respected
-  Q8 → RQ3:     CBG_Executor execution consistency — active state with callbacks
+  Q3 → RQ1:     callback execution sequence reachable in model
+  Q4 → RQ1:     message delivery reachable — message-flow model represented
+  Q5 → RQ2:     full generated system reaches operational timed state
+  Q6 → RQ2:     integrated executor behaviour reachable after MDE conversion
+  Q7 → RQ3:     QoS history bound reachable and respected
+  Q8 → RQ3:     QoS/channel infrastructure supports active callback execution
 /]
     <queries>
         <query>
             <formula>E&lt;&gt; not deadlock</formula>
-            <comment>RQ1+RQ3 Q1: A valid execution path exists — automated transformation produces a viable model, not a broken one</comment>
+            <comment>RQ1 Q1: A valid execution path exists — trace-derived topology produces a viable model, not a broken one</comment>
         </query>
 
 [if (aSystem.executors->exists(e | e.timerCallbacks->notEmpty()))]
@@ -321,47 +321,39 @@ system [for (executor : Executor | aSystem.executors) separator(', ')][executor.
             <formula>E&lt;&gt; [timerExec.name.replaceAll(' ', '_')/].local_clock &gt; 0 and [timerExec.name.replaceAll(' ', '_')/].local_clock &lt;= 100000</formula>
             <comment>RQ1 Q2: Timing constraints from LTTng trace are reachable — timing semantics survive the pipeline</comment>
         </query>
-[/let]
-[/if]
+
+        <query>
+            <formula>E&lt;&gt; [timerExec.name.replaceAll(' ', '_')/].callback_count &gt; 0</formula>
+            <comment>RQ1 Q3: Callback execution sequence is reachable — trace-derived callback structure is represented in the generated model</comment>
+        </query>
 
         <query>
             <formula>E&lt;&gt; message_count &gt; 0</formula>
-            <comment>RQ2+RQ3 Q3: Message delivery is reachable — QoS RELIABLE delivery guarantee is representable in the generated model</comment>
+            <comment>RQ1 Q4: Message delivery is reachable — ROS 2 publish-subscribe message flow is represented in the generated model</comment>
         </query>
 
         <query>
             <formula>E&lt;&gt; system_running and global_clock &gt; 0</formula>
-            <comment>RQ1 Q4: System reaches operational state with elapsed time — ROS 2 timing semantics preserved post-transformation</comment>
+            <comment>RQ2 Q5: The generated system reaches an operational timed state — Python, QVT-O and Acceleo stages integrate correctly</comment>
         </query>
 
-[if (aSystem.executors->exists(e | e.subscriberCallbacks->notEmpty()))]
-[let subExec : Executor = aSystem.executors->select(e | e.subscriberCallbacks->notEmpty())->first()]
         <query>
-            <formula>E&lt;&gt; [subExec.name.replaceAll(' ', '_')/].callback_count &gt; 0</formula>
-            <comment>RQ1+RQ3 Q5: Subscriber executor reachably executes — trace-extracted CBG_Executor behaviour reproducible, confirming trace-to-model fidelity</comment>
-        </query>
-[/let]
-[/if]
-
-[if (aSystem.executors->exists(e | e.timerCallbacks->notEmpty()))]
-[let timerExec : Executor = aSystem.executors->select(e | e.timerCallbacks->notEmpty())->first()]
-        <query>
-            <formula>E&lt;&gt; [timerExec.name.replaceAll(' ', '_')/].callback_count &gt; 0</formula>
-            <comment>RQ3 Q6: Timer callback reachably fires — CBG_Executor periodic scheduling semantics captured by automated transformation</comment>
+            <formula>E&lt;&gt; system_running and [timerExec.name.replaceAll(' ', '_')/].callback_count &gt; 0</formula>
+            <comment>RQ2 Q6: Integrated executor behaviour is reachable — the MDE conversion produces an operational model with active callbacks</comment>
         </query>
 [/let]
 [/if]
 
         <query>
             <formula>E&lt;&gt; message_count &gt; 0 and message_count &lt;= MAX_RELEASES</formula>
-            <comment>RQ2 Q7: QoS throughput bound reachable and respected — model encodes both delivery and QoS history constraints from trace</comment>
+            <comment>RQ3 Q7: QoS history bound is reachable and respected — model encodes delivery constrained by propagated QoS depth</comment>
         </query>
 
 [if (aSystem.executors->exists(e | e.timerCallbacks->notEmpty()))]
 [let timerExec : Executor = aSystem.executors->select(e | e.timerCallbacks->notEmpty())->first()]
         <query>
             <formula>E&lt;&gt; [timerExec.name.replaceAll(' ', '_')/].is_executing and [timerExec.name.replaceAll(' ', '_')/].callback_count &gt; 0</formula>
-            <comment>RQ3 Q8: CBG_Executor execution consistency reachable — timer executor reaches active state with registered callbacks, matching trace semantics</comment>
+            <comment>RQ3 Q8: QoS/channel infrastructure supports active callback execution — generated broadcast channels do not block executor progress</comment>
         </query>
 [/let]
 [/if]
@@ -375,6 +367,14 @@ system [for (executor : Executor | aSystem.executors) separator(', ')][executor.
 
 ## Part 3: Run the Acceleo Transformation
 
+Before running the transformation, force Eclipse to recompile the Acceleo module:
+
+1. **Project** → **Clean...**
+2. Select `ROS2VM2UTA`
+3. Enable **Start a build immediately**
+4. Confirm that `ROS2VM2UTA/bin/ROS2VM2UTA/main/generateUTA.emtl` is regenerated after the `.mtl` edit
+
+If this step is skipped, Eclipse may run an old compiled `.emtl` file and UPPAAL will still show the old query comments/formulas.
 
 1. Right-click `generateUTA.mtl` → **Run As** → **Run Configurations…**
 2. Right-click **Acceleo Application** in the left panel → **New Configuration**

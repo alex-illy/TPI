@@ -374,7 +374,7 @@ main() {
 mapping ROS2DataModelMM::System::transformSystem() : ROS2VerificationModelMM::System {
     name        := self.Name;
     stopTime    := 1000000;
-    maxReleases := 100;
+    maxReleases := if self.qos_depth > 0 then self.qos_depth else 100 endif;
 
     executors := self.node.executor->map transformExecutor();
 
