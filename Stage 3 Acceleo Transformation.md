@@ -75,56 +75,56 @@ int sub_count_[sub.id.replaceAll(' ', '_')/] = 0;
 [/for]
         </declaration>
 
-        <location id="id0" x="0" y="0">
+        <location id="id0_[executor.name.replaceAll(' ', '_')/]" x="0" y="0">
             <name x="0" y="-25">Initial</name>
         </location>
 
-        <location id="id1" x="150" y="0">
+        <location id="id1_[executor.name.replaceAll(' ', '_')/]" x="150" y="0">
             <name x="150" y="-25">Ready</name>
             <label kind="invariant" x="150" y="15">local_clock &lt;= 100000</label>
         </location>
 
-        <location id="id2" x="300" y="0">
+        <location id="id2_[executor.name.replaceAll(' ', '_')/]" x="300" y="0">
             <name x="300" y="-25">Executing</name>
             <committed/>
         </location>
 
-        <location id="id3" x="450" y="0">
+        <location id="id3_[executor.name.replaceAll(' ', '_')/]" x="450" y="0">
             <name x="450" y="-25">Waiting</name>
         </location>
 
-        <location id="id4" x="600" y="0">
+        <location id="id4_[executor.name.replaceAll(' ', '_')/]" x="600" y="0">
             <name x="600" y="-25">Publishing</name>
             <urgent/>
         </location>
 
-        <init ref="id0"/>
+        <init ref="id0_[executor.name.replaceAll(' ', '_')/]"/>
 
 [comment Executor self-starts — no external start? sync needed /]
         <transition>
-            <source ref="id0"/>
-            <target ref="id1"/>
+            <source ref="id0_[executor.name.replaceAll(' ', '_')/]"/>
+            <target ref="id1_[executor.name.replaceAll(' ', '_')/]"/>
             <label kind="assignment" x="75" y="0">local_clock = 0</label>
         </transition>
 
         <transition>
-            <source ref="id1"/>
-            <target ref="id2"/>
+            <source ref="id1_[executor.name.replaceAll(' ', '_')/]"/>
+            <target ref="id2_[executor.name.replaceAll(' ', '_')/]"/>
             <label kind="guard" x="225" y="-40">local_clock &gt;= 1000</label>
             <label kind="assignment" x="225" y="-20">callback_count++,
 local_clock = 0</label>
         </transition>
 
         <transition>
-            <source ref="id2"/>
-            <target ref="id3"/>
+            <source ref="id2_[executor.name.replaceAll(' ', '_')/]"/>
+            <target ref="id3_[executor.name.replaceAll(' ', '_')/]"/>
             <label kind="guard" x="375" y="-40">callback_count &gt; 0</label>
             <label kind="assignment" x="375" y="-20">is_executing = true</label>
         </transition>
 
         <transition>
-            <source ref="id3"/>
-            <target ref="id4"/>
+            <source ref="id3_[executor.name.replaceAll(' ', '_')/]"/>
+            <target ref="id4_[executor.name.replaceAll(' ', '_')/]"/>
             <label kind="guard" x="525" y="-40">is_executing</label>
             <label kind="synchronisation" x="525" y="-20">message_pub!</label>
             <label kind="assignment" x="525" y="0">message_count++,
@@ -132,16 +132,16 @@ published_messages++</label>
         </transition>
 
         <transition>
-            <source ref="id4"/>
-            <target ref="id1"/>
+            <source ref="id4_[executor.name.replaceAll(' ', '_')/]"/>
+            <target ref="id1_[executor.name.replaceAll(' ', '_')/]"/>
             <label kind="assignment" x="375" y="50">is_executing = false</label>
             <nails><nail x="600" y="50"/><nail x="150" y="50"/></nails>
         </transition>
 
 [for (timer : TimerCallback | executor.timerCallbacks)]
         <transition>
-            <source ref="id1"/>
-            <target ref="id2"/>
+            <source ref="id1_[executor.name.replaceAll(' ', '_')/]"/>
+            <target ref="id2_[executor.name.replaceAll(' ', '_')/]"/>
             <label kind="guard" x="225" y="25">timer_clock_[timer.id.replaceAll(' ', '_')/] &gt;= period_[timer.id.replaceAll(' ', '_')/]</label>
             <label kind="assignment" x="225" y="45">timer_clock_[timer.id.replaceAll(' ', '_')/] = 0</label>
             <nails><nail x="225" y="25"/></nails>
@@ -164,32 +164,32 @@ bool pub_enabled = true;
 const int pub_period = 1000; // 1ms publishing period
         </declaration>
 
-        <location id="id0" x="0" y="0">
+        <location id="id0_[pubName/]" x="0" y="0">
             <name x="0" y="-25">Idle</name>
         </location>
 
-        <location id="id1" x="120" y="0">
+        <location id="id1_[pubName/]" x="120" y="0">
             <name x="120" y="-25">Ready</name>
             <label kind="invariant" x="120" y="15">pub_timer &lt;= pub_period</label>
         </location>
 
-        <location id="id2" x="240" y="0">
+        <location id="id2_[pubName/]" x="240" y="0">
             <name x="240" y="-25">Publishing</name>
             <urgent/>
         </location>
 
-        <init ref="id0"/>
+        <init ref="id0_[pubName/]"/>
 
 [comment Publisher self-starts /]
         <transition>
-            <source ref="id0"/>
-            <target ref="id1"/>
+            <source ref="id0_[pubName/]"/>
+            <target ref="id1_[pubName/]"/>
             <label kind="assignment" x="60" y="0">pub_timer = 0</label>
         </transition>
 
         <transition>
-            <source ref="id1"/>
-            <target ref="id2"/>
+            <source ref="id1_[pubName/]"/>
+            <target ref="id2_[pubName/]"/>
             <label kind="guard" x="180" y="-40">pub_timer >= pub_period &amp;&amp;
 pub_enabled</label>
             <label kind="synchronisation" x="180" y="-20">[pubName.replaceAll('Publisher_', '')/]_chan!</label>
@@ -197,8 +197,8 @@ pub_enabled</label>
         </transition>
 
         <transition>
-            <source ref="id2"/>
-            <target ref="id1"/>
+            <source ref="id2_[pubName/]"/>
+            <target ref="id1_[pubName/]"/>
             <label kind="assignment" x="180" y="25">pub_timer = 0</label>
             <nails><nail x="240" y="25"/><nail x="120" y="25"/></nails>
         </transition>
@@ -222,51 +222,51 @@ const int proc_wcet = 1000;
 const int proc_bcet = 500;
         </declaration>
 
-        <location id="id0" x="0" y="0">
+        <location id="id0_[subName/]" x="0" y="0">
             <name x="0" y="-25">Idle</name>
         </location>
 
-        <location id="id1" x="120" y="0">
+        <location id="id1_[subName/]" x="120" y="0">
             <name x="120" y="-25">Active</name>
             <committed/>
         </location>
 
-        <location id="id2" x="240" y="0">
+        <location id="id2_[subName/]" x="240" y="0">
             <name x="240" y="-25">Processing</name>
             <label kind="invariant" x="240" y="15">proc_clock &lt;= proc_wcet</label>
         </location>
 
-        <location id="id3" x="360" y="0">
+        <location id="id3_[subName/]" x="360" y="0">
             <name x="360" y="-25">Complete</name>
             <urgent/>
         </location>
 
-        <init ref="id0"/>
+        <init ref="id0_[subName/]"/>
 
         <transition>
-            <source ref="id0"/>
-            <target ref="id1"/>
+            <source ref="id0_[subName/]"/>
+            <target ref="id1_[subName/]"/>
             <label kind="synchronisation" x="60" y="-20">[subName.replaceAll('Subscriber_', '')/]_chan?</label>
             <label kind="assignment" x="60" y="0">proc_clock = 0</label>
         </transition>
 
         <transition>
-            <source ref="id1"/>
-            <target ref="id2"/>
+            <source ref="id1_[subName/]"/>
+            <target ref="id2_[subName/]"/>
             <label kind="assignment" x="180" y="-20">processing = true</label>
         </transition>
 
         <transition>
-            <source ref="id2"/>
-            <target ref="id3"/>
+            <source ref="id2_[subName/]"/>
+            <target ref="id3_[subName/]"/>
             <label kind="guard" x="300" y="-40">proc_clock >= proc_bcet</label>
             <label kind="synchronisation" x="300" y="-20">message_sub!</label>
             <label kind="assignment" x="300" y="0">sub_count++</label>
         </transition>
 
         <transition>
-            <source ref="id3"/>
-            <target ref="id0"/>
+            <source ref="id3_[subName/]"/>
+            <target ref="id0_[subName/]"/>
             <label kind="assignment" x="180" y="25">processing = false,
 proc_clock = 0</label>
             <nails><nail x="360" y="25"/><nail x="0" y="25"/></nails>
